@@ -468,6 +468,18 @@ public:
 		}
 	}
 
+	inline void to_uint64(uint64& kmer)
+	{
+		uint32 offset = 62 - ((kmer_length - 1 + byte_alignment) & 31) * 2;
+		if (offset)
+		{
+			kmer = kmer_data[0] >> offset;
+		}
+		else
+		{	
+			kmer = kmer_data[0];						
+		}
+	}
 	//-----------------------------------------------------------------------
 	// Convert kmer into string (an alphabet ACGT)
 	// OUT 	: str - string kmer
