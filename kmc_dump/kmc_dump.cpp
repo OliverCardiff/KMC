@@ -139,12 +139,15 @@ int _tmain(int argc, char* argv[])
 		}
 		else
 		{
-			uint64 data[2];
+			uint64 counter;
 			fwrite(&_total_kmers, 1, sizeof(uint64), out_file);
-			while (kmer_data_base.ReadNextKmer(kmer_object, data[1]))
+			fwrite(&_kmer_length, 1, sizeof(uint32), out_file);
+			while (kmer_data_base.ReadNextKmer(kmer_object, counter))
 			{
-				kmer_object.to_uint64(data[0]);
-				fwrite(&data[0], 2, sizeof(uint64), out_file);
+				kmer_object.to_string(str);
+				
+				fwrite(str, 1, _kmer_length, out_file);
+				fwrite(&counter, 1, sizeof(uint64), out_file);
 			}
 		}
 		
