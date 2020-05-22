@@ -140,8 +140,9 @@ int _tmain(int argc, char* argv[])
 		else
 		{
 			uint64 counter;
+			uint64 lconv = (uint64)_kmer_length;
 			fwrite(&_total_kmers, 1, sizeof(uint64), out_file);
-			fwrite(&_kmer_length, 1, sizeof(uint32), out_file);
+			fwrite(&lconv, 1, sizeof(uint64), out_file);
 			while (kmer_data_base.ReadNextKmer(kmer_object, counter))
 			{
 				kmer_object.to_string(str);
