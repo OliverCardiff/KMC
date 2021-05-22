@@ -50,7 +50,7 @@ int _tmain(int argc, char* argv[])
 	//------------------------------------------------------------
 	// Parse input parameters
 	//------------------------------------------------------------
-	if(argc < 3)
+	if(argc < 2)
 	{
 		print_info();
 		return EXIT_FAILURE;
@@ -69,22 +69,13 @@ int _tmain(int argc, char* argv[])
 			break;
 	}
 
-	if(argc - i < 2)
+	if(argc - i < 1)
 	{ 
 		print_info();
 		return EXIT_FAILURE;
 	}
 
 	input_file_name = std::string(argv[i++]);
-	output_file_name = std::string(argv[i]);
-
-	if((out_file = fopen (output_file_name.c_str(),"wb")) == NULL)
-	{
-		print_info();
-		return EXIT_FAILURE;
-	}
-
-	setvbuf(out_file, NULL ,_IOFBF, 1 << 24);
 
 	//------------------------------------------------------------------------------
 	// Open kmer database for listing and print kmers within min_count and max_count
@@ -118,28 +109,20 @@ int _tmain(int argc, char* argv[])
 				return EXIT_FAILURE;	
 
 		
-		std::string str;
-		if (_mode) //quake compatible mode
+
+		uint32 counter;
+		uint64 kmerOut;
+		char* ch;
+		while (kmer_data_base.ReadNextKmer(kmer_object, counter))
 		{
-			float counter;			
-			while (kmer_data_base.ReadNextKmer(kmer_object, counter))
-			{
-				kmer_object.to_string(str);	
-				fprintf(out_file, "%s\t%f\n", str.c_str(), counter);			
-			}
-		}
-		else 
-		{
-			uint32 counter;			
-			while (kmer_data_base.ReadNextKmer(kmer_object, counter))
-			{
-				kmer_object.to_string(str);
-				fprintf(out_file, "%s\t%u\n", str.c_str(), counter);
-			}
+			kmer_object.to_uint64(kmerOut);
+			ch = (char*)&kmerOut;
+			std::cout.write(ch, 8);
+			ch = (char*)&counter;
+			std::cout.write(ch, 4);
 		}
 		
 	
-		fclose(out_file);
 		kmer_data_base.Close();
 	}
 
@@ -151,7 +134,7 @@ int _tmain(int argc, char* argv[])
 void print_info(void)
 {
 	std::cout << "KMC dump ver. " << KMC_VER << " (" << KMC_DATE << ")\n"
-			  << "\nUsage:\nkmc_dump [options] <kmc_database> <output_file>\n"
+			  << "\nUsage:\nkmc_dump_sample [options] <kmc_database>\n"
 			  << "Parameters:\n"
 			  << "<kmc_database> - kmer_counter's output\n"
 			  << "Options:\n"

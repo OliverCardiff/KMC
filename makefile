@@ -1,10 +1,10 @@
-all: kmc kmc_dump kmc_dump_chars kmc_tools py_kmc_api
+all: kmc kmc_dump kmc_dump_sample kmc_tools py_kmc_api
 
 KMC_BIN_DIR = bin
 KMC_MAIN_DIR = kmer_counter
 KMC_API_DIR = kmc_api
 KMC_DUMP_DIR = kmc_dump
-KMC_CHARS_DIR = kmc_dump_chars
+KMC_SAMPLE_DIR = kmc_dump_sample
 KMC_TOOLS_DIR = kmc_tools
 PY_KMC_API_DIR = py_kmc_api
 
@@ -45,9 +45,9 @@ KMC_DUMP_OBJS = \
 $(KMC_DUMP_DIR)/nc_utils.o \
 $(KMC_DUMP_DIR)/kmc_dump.o
 
-KMC_CHARS_OBJS = \
-$(KMC_CHARS_DIR)/nc_utils.o \
-$(KMC_CHARS_DIR)/kmc_dump.o
+KMC_SAMPLE_OBJS = \
+$(KMC_SAMPLE_DIR)/nc_utils.o \
+$(KMC_SAMPLE_DIR)/kmc_dump_sample.o
 
 KMC_API_OBJS = \
 $(KMC_API_DIR)/mmer.o \
@@ -73,7 +73,7 @@ KMC_TOOLS_LIBS = \
 $(KMC_TOOLS_DIR)/libs/libz.a \
 $(KMC_TOOLS_DIR)/libs/libbz2.a
 
-$(KMC_OBJS) $(KMC_DUMP_OBJS) $(KMC_CHARS_OBJS) $(KMC_API_OBJS): %.o: %.cpp
+$(KMC_OBJS) $(KMC_DUMP_OBJS) $(KMC_SAMPLE_OBJS) $(KMC_API_OBJS): %.o: %.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(KMC_TOOLS_OBJS): %.o: %.cpp
@@ -96,7 +96,7 @@ kmc_dump: $(KMC_DUMP_OBJS) $(KMC_API_OBJS)
 	-mkdir -p $(KMC_BIN_DIR)
 	$(CC) $(CLINK) -o $(KMC_BIN_DIR)/$@ $^
 
-kmc_dump_chars: $(KMC_CHARS_OBJS) $(KMC_API_OBJS)
+kmc_dump_sample: $(KMC_SAMPLE_OBJS) $(KMC_API_OBJS)
 	-mkdir -p $(KMC_BIN_DIR)
 	$(CC) $(CLINK) -o $(KMC_BIN_DIR)/$@ $^
 
@@ -119,6 +119,7 @@ clean:
 	-rm -f $(KMC_MAIN_DIR)/*.o
 	-rm -f $(KMC_API_DIR)/*.o
 	-rm -f $(KMC_DUMP_DIR)/*.o
+	-rm -f $(KMC_SAMPLE_DIR)/*.o
 	-rm -f $(KMC_TOOLS_DIR)/*.o
 	-rm -f $(PY_KMC_API_DIR)/*.o
 	-rm -f $(PY_KMC_API_DIR)/*.so
